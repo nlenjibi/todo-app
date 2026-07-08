@@ -1,0 +1,50 @@
+{
+  "family": "prod-bem15-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/prod-bem15-ecs-exec-role",
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/prod-bem15-ecs-task-role",
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "<IMAGE1_NAME>",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "PORT",       "value": "8080"    },
+        { "name": "DB_PORT",    "value": "5432"    },
+        { "name": "DB_NAME",    "value": "photodb" },
+        { "name": "REDIS_PORT", "value": "6379"    }
+      ],
+      "secrets": [
+        { "name": "SPRING_PROFILES_ACTIVE", "valueFrom": "/bem15/prod/app/spring-profile" },
+        { "name": "DB_HOST",                "valueFrom": "/bem15/prod/db/proxy-host"       },
+        { "name": "REDIS_HOST",             "valueFrom": "/bem15/prod/cache/redis-host"    },
+        { "name": "DB_USERNAME",            "valueFrom": "prod/bem15/rds/credentials:username::" },
+        { "name": "DB_PASSWORD",            "valueFrom": "prod/bem15/rds/credentials:password::" }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/prod-bem15",
+          "awslogs-region": "eu-west-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080/health || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      },
+      "essential": true
+    }
+  ]
+}
