@@ -92,8 +92,8 @@ jobs:
           sed "s|<IMAGE1_NAME>|${ECR_URI}|g; s|ACCOUNT_ID|${ACCOUNT_ID}|g" \
             codedeploy/taskdef.json > /tmp/taskdef.json
           cp codedeploy/appspec.yaml /tmp/appspec.yaml
-          cd /tmp && zip -q deploy-artifacts.zip taskdef.json appspec.yaml
-          aws s3 cp deploy-artifacts.zip "s3://${ARTIFACTS_BUCKET}/prod/deploy-artifacts.zip"
+          (cd /tmp && zip -q deploy-artifacts.zip taskdef.json appspec.yaml)
+          aws s3 cp /tmp/deploy-artifacts.zip "s3://${ARTIFACTS_BUCKET}/prod/deploy-artifacts.zip"
 
           docker buildx build --push \
             --tag "${ECR_URI}" \
