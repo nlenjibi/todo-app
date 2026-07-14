@@ -1,4 +1,9 @@
 (function () {
+  const appLoader = document.getElementById('appLoader');
+  window.addEventListener('load', function () {
+    if (appLoader) appLoader.classList.add('hidden');
+  });
+
   const loader = document.createElement('div');
   loader.className = 'page-loader';
   document.body.prepend(loader);
@@ -7,7 +12,46 @@
     loader.classList.add('active');
   }
 
+  const deleteModal = document.getElementById('deleteModal');
+  const deleteCancelBtn = document.getElementById('deleteCancelBtn');
+  const deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+  let formPendingDelete = null;
+
+  function openDeleteModal(form) {
+    formPendingDelete = form;
+    deleteModal.classList.add('active');
+  }
+
+  function closeDeleteModal() {
+    formPendingDelete = null;
+    deleteModal.classList.remove('active');
+  }
+
+  if (deleteModal) {
+    deleteCancelBtn.addEventListener('click', closeDeleteModal);
+    deleteModal.addEventListener('click', function (e) {
+      if (e.target === deleteModal) closeDeleteModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && deleteModal.classList.contains('active')) closeDeleteModal();
+    });
+    deleteConfirmBtn.addEventListener('click', function () {
+      const form = formPendingDelete;
+      closeDeleteModal();
+      if (form) {
+        form.dataset.confirmed = 'true';
+        form.requestSubmit();
+      }
+    });
+  }
+
   document.addEventListener('submit', function (e) {
+    if (e.target.classList.contains('delete-form') && e.target.dataset.confirmed !== 'true') {
+      e.preventDefault();
+      openDeleteModal(e.target);
+      return;
+    }
+
     if (e.defaultPrevented) return;
     showLoader();
     const btn = e.target.querySelector('button[type="submit"]');

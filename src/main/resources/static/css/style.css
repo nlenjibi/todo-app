@@ -31,6 +31,29 @@ body {
 }
 .page-loader.active { width: 90%; opacity: 1; }
 
+/* Full-screen loader shown on every page load, including refreshes.
+   Visible by default (no JS needed to show it) and faded out once the
+   window "load" event fires, so it also covers cold/hard refreshes. */
+.app-loader {
+  position: fixed;
+  inset: 0;
+  background: #0f172a;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+.app-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.app-loader .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(96, 165, 250, 0.25);
+  border-top-color: #60a5fa;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
 .is-loading {
   position: relative;
   color: transparent !important;
@@ -286,6 +309,34 @@ h1 {
   transition: all 0.3s ease;
 }
 .btn-save:hover { box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3); }
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.btn-danger:hover { box-shadow: 0 8px 16px rgba(239, 68, 68, 0.35); }
+
+/* ── Delete confirmation modal ──────────────────────────────────
+   Overlay + reused .modal-content card, toggled via .active. */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 2500;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+.modal-overlay .modal-body { color: #94a3b8; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
 
 @media (max-width: 600px) {
   h1 { font-size: 32px; }
