@@ -26,8 +26,8 @@
         { "name": "SPRING_PROFILES_ACTIVE", "valueFrom": "/bem15/prod/app/spring-profile" },
         { "name": "DB_HOST",                "valueFrom": "/bem15/prod/db/proxy-host"       },
         { "name": "REDIS_HOST",             "valueFrom": "/bem15/prod/cache/redis-host"    },
-        { "name": "DB_USERNAME",            "valueFrom": "prod/bem15/rds/credentials:username::" },
-        { "name": "DB_PASSWORD",            "valueFrom": "prod/bem15/rds/credentials:password::" }
+        { "name": "DB_USERNAME",            "valueFrom": "<DB_SECRET_ARN>:username::" },
+        { "name": "DB_PASSWORD",            "valueFrom": "<DB_SECRET_ARN>:password::" }
       ],
       "logConfiguration": {
         "logDriver": "awslogs",

@@ -87,9 +87,10 @@ jobs:
         run: |
           ECR_URI=$(aws ssm get-parameter --name /bem15/prod/ecr/image-uri --query Parameter.Value --output text)
           ARTIFACTS_BUCKET=$(aws ssm get-parameter --name /bem15/prod/s3/artifacts-bucket --query Parameter.Value --output text)
+          DB_SECRET_ARN=$(aws ssm get-parameter --name /bem15/prod/db/secret-arn --query Parameter.Value --output text)
           ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
-          sed "s|<IMAGE1_NAME>|${ECR_URI}|g; s|ACCOUNT_ID|${ACCOUNT_ID}|g" \
+          sed "s|<IMAGE1_NAME>|${ECR_URI}|g; s|<DB_SECRET_ARN>|${DB_SECRET_ARN}|g; s|ACCOUNT_ID|${ACCOUNT_ID}|g" \
             codedeploy/taskdef.json > /tmp/taskdef.json
           cp codedeploy/appspec.yaml /tmp/appspec.yaml
           (cd /tmp && zip -q deploy-artifacts.zip taskdef.json appspec.yaml)
