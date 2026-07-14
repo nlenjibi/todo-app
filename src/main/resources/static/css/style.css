@@ -14,6 +14,43 @@ body {
 
 .container { max-width: 800px; margin: 0 auto; }
 
+/* ── Page-navigation loader ─────────────────────────────────────
+   Progress bar creeps toward 90% on submit/click and is naturally
+   replaced when the next page loads (no explicit "done" state needed
+   since this app does real full-page navigations, not AJAX). */
+.page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, #60a5fa, #3b82f6);
+  z-index: 2000;
+  opacity: 0;
+  transition: width 4s cubic-bezier(0.1, 0.7, 1, 0.1), opacity 0.2s;
+}
+.page-loader.active { width: 90%; opacity: 1; }
+
+.is-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+.is-loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 header { text-align: center; margin-bottom: 40px; padding: 40px 20px 20px; }
 
 h1 {

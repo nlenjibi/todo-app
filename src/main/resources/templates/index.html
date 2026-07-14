@@ -70,7 +70,8 @@
         <input type="hidden" name="title" th:value="${task.title}"/>
         <input type="hidden" name="description" th:value="${task.description}"/>
         <input type="hidden" name="completed" th:value="${!task.completed}"/>
-        <input type="checkbox" class="task-checkbox" th:checked="${task.completed}" onchange="this.form.submit()"/>
+        <input type="checkbox" class="task-checkbox" aria-label="Mark task as completed"
+               th:checked="${task.completed}" onchange="this.form.requestSubmit()"/>
       </form>
 
       <div class="task-content">
@@ -93,25 +94,6 @@
 
 </div>
 
-<script th:inline="javascript">
-  const filterBtns = document.querySelectorAll('.filter-btn');
-  const taskItems = document.querySelectorAll('.task-item[data-completed]');
-
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
-
-      taskItems.forEach(item => {
-        const completed = item.dataset.completed === 'true';
-        const show = filter === 'all'
-          || (filter === 'active' && !completed)
-          || (filter === 'completed' && completed);
-        item.classList.toggle('hidden-by-filter', !show);
-      });
-    });
-  });
-</script>
+<script th:src="@{/js/app.js}"></script>
 </body>
 </html>
